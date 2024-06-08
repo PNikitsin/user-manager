@@ -1,0 +1,56 @@
+﻿@model UserManager.ViewModels.UserListModel
+@{
+    ViewBag.Title = "The list of users";
+}
+
+<form method="post">
+    <button asp-action="Block" type="submit" class="btn btn-sm btn-primary">Block</button>
+    <button asp-action="Unblock" type="submit" class="btn btn-sm btn-primary">Unblock</button>
+    <button asp-action="Delete" type="submit" class="btn btn-sm btn-danger">Delete</button>
+
+    <table class="table">
+        <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Registered</th>
+            <th>Authorized</th>
+            <th>Status</th>
+        </tr>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td><input type="checkbox" value="@user.Id" name="UserIds" asp-for="@user.IsSelected"></td>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.CreatedAt</td>
+                <td>@user.LoginedAt</td>
+                @if (user.IsBlocked == false)
+                {
+                    <td>Active</td>
+                }
+                else
+                {
+                    <td>Blocked</td>
+                }
+            </tr>
+        }
+    </table>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#selectAll").click(function () {
+                $("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+            });
+            $("input[type=checkbox]").click(function () {
+                if (!$(this).prop("checked")) {
+                    $("#selectAll").prop("checked", false);
+                }
+            });
+        });
+    </script>
+}

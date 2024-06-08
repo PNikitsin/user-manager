@@ -1,9 +1,11 @@
+using UserManager.AutoMapper;
 using UserManager.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddIdentification(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddRouting(options
     => options.LowercaseUrls = true);
