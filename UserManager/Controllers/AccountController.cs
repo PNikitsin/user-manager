@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UserManager.Entities;
 using UserManager.ViewModels;
 
 namespace UserManager.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,18 +36,21 @@ namespace UserManager.Controllers
                 return View(registerViewModel);
             }
 
-            user = new IdentityUser
+            user = new ApplicationUser
             {
                 Email = registerViewModel.Email,
                 UserName = registerViewModel.Email,
-                LockoutEnabled = false
+                CreatedAt = DateTime.UtcNow
             };
 
             var newUserResponse = await _userManager.CreateAsync(user, registerViewModel.Password);
 
             if (newUserResponse.Succeeded)
             {
+                user.LoginedAt = DateTime.UtcNow;
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
+                await _userManager.UpdateAsync(user);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -83,6 +87,9 @@ namespace UserManager.Controllers
 
                     if (result.Succeeded)
                     {
+                        user.LoginedAt = DateTime.UtcNow;
+                        await _userManager.UpdateAsync(user);
+
                         return RedirectToAction("Index", "Home");
                     }
                     if (result.IsLockedOut)

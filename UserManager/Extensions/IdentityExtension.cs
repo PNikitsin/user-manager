@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserManager.Data;
+using UserManager.Entities;
 
 namespace UserManager.Extensions
 {
@@ -7,7 +8,7 @@ namespace UserManager.Extensions
     {
         public static IServiceCollection AddIdentification(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
