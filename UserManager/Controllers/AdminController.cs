@@ -41,6 +41,8 @@ namespace UserManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Block(UserListModel model)
         {
+            if (model.UserIds == null) return RedirectToAction("Index");
+
             var users = _userManager.Users.Where(user => model.UserIds.Contains(user.Id)).ToList();
             var currentUser = users.FirstOrDefault(user => user.UserName == GetUsername());
 
@@ -63,6 +65,8 @@ namespace UserManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Unblock(UserListModel model)
         {
+            if (model.UserIds == null) return RedirectToAction("Index");
+
             var users = _userManager.Users.Where(user => model.UserIds.Contains(user.Id)).ToList();
             var currentUser = users.FirstOrDefault(user => user.UserName == GetUsername());
 
@@ -80,6 +84,8 @@ namespace UserManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(UserListModel model)
         {
+            if (model.UserIds == null) return RedirectToAction("Index");
+
             var users = _userManager.Users.Where(user => model.UserIds.Contains(user.Id)).ToList();
             var currentUser = users.FirstOrDefault(user => user.UserName == GetUsername());
 
